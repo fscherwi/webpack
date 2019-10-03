@@ -1,5 +1,3 @@
-sudo: false
-dist: trusty
 language: node_js
 
 branches:
@@ -36,30 +34,15 @@ matrix:
       env: NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
     - os: linux
-      node_js: "10"
-      env:
-        - NODEJS_VERSION=v12.0.0-nightly20190206686043e76e
-        - YARN_EXTRA_ARGS="--ignore-engines"
-        - NO_WATCH_TESTS=1
-        - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
-        - JOB_PART=integration
+      node_js: "12"
+      env:  NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
   fast_finish: true
 
-before_install:
-  - |
-    if [ "$NODEJS_VERSION" != "" ];
-    then
-      mkdir /opt/node
-      curl --silent "https://nodejs.org/download/nightly/$NODEJS_VERSION/node-$NODEJS_VERSION-linux-x64.tar.gz" | tar -zxf - --directory /opt/node
-      export PATH="/opt/node/node-$NODEJS_VERSION-linux-x64/bin:$PATH"
-      node --version
-    fi
-
 install:
-  - yarn --frozen-lockfile $YARN_EXTRA_ARGS
-  - yarn link --frozen-lockfile $YARN_EXTRA_ARGS || true
-  - yarn link webpack --frozen-lockfile $YARN_EXTRA_ARGS
+  - yarn --frozen-lockfile
+  - yarn link --frozen-lockfile
+  - yarn link webpack --frozen-lockfile
 
 script: yarn travis:$JOB_PART
 
